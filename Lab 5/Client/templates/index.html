@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;600;700&display=swap"
+    />
+    <style>
+      body {margin: 0; background-color: rgb(208, 244, 252); line-height: normal;}
+    </style>
+</head>
+<body style="margin: 0;padding: 0;background-color: rgb(208, 244, 252);line-height: normal;">
+    <div style="justify-content: center;margin-top: 25px; align-items: center; text-align: center; font-size: 25px; color: #000; font-family: Roboto;height: 40%;width: 100%;top: 56.03%;left: 0%; font-weight: 600;">
+        CÔNG NGHỆ INTERNET OF THINGS HIỆN ĐẠI
+        <p style="margin: 0">
+            NT532.O21.2 - Nhóm 8 - Lab 5
+        </p>
+    </div>
+    <div style="justify-content: center; align-items: center; text-align: center; margin-top: 20px; margin-bottom: 10px;">
+        <button onclick="sendImage()" id="captureButton" style="height: 50px; width: 100px; border-radius: 5px; font-size: 17px; font-weight: 700;">
+            Chụp ảnh</button>     
+    </div>
+
+    <div style=" display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 20px; color: #000; font-family: Roboto;">
+        <img style="margin-top: 5px;" id="resultImage"  src=""></img>
+        <div style="margin-top: 10px;" id="resultText"></div>  
+        <div id="time"></div>      
+    </div>
+  
+    
+
+    <script>
+        const resultDiv = document.getElementById("resultText");
+        const resultImage = document.getElementById("resultImage");
+        const delayTime = document.getElementById("time");
+
+        function sendImage() {
+            fetch('/send_image', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Lỗi khi gửi yêu cầu chụp ảnh.');
+                }
+            })
+            .then(data => {
+                resultDiv.textContent = 'Kết quả nhận diện: ' + data.result;
+                resultImage.src = "data:image/jpeg;base64," + data.image;
+                delayTime.textContent = 'Thời gian nhận diện: ' + data.delay.toFixed(2) + ' giây';
+
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }
+    </script>
+</body>
+</html>

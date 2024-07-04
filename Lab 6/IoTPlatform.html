@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;600;700&display=swap"
+    />
+    <style>
+        body {margin: 0; background-color: rgb(208, 244, 252); line-height: normal;}
+        th, td {padding: 10px;}
+      </style>
+</head>
+<body style="margin: 0;padding: 0;background-color: rgb(208, 244, 252);line-height: normal;">
+    <div style="justify-content: center;margin-top: 25px; align-items: center; text-align: center; font-size: 25px; color: #000; font-family: Roboto;height: 40%;width: 100%;top: 56.03%;left: 0%; font-weight: 600;">
+        CÔNG NGHỆ INTERNET OF THINGS HIỆN ĐẠI
+        <p style="margin: 0">
+            NT532.O21.2 - Nhóm 8 - Lab 5
+        </p>
+    </div>
+    <div style=" display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 20px; color: #000; font-family: Roboto;">
+        <table style="margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Room ID</th>
+                    <th>Student Name</th>
+                </tr>
+            </thead>
+            <tbody id="dataBody"></tbody>
+        </table>
+    </div>
+  
+    
+
+    <script>
+        const dataBody = document.getElementById("dataBody");
+
+        function updateData(timestamp, roomId, studentName) {
+            const row = document.createElement("tr");
+
+            const timestampCell = document.createElement("td");
+            timestampCell.textContent = timestamp;
+            row.appendChild(timestampCell);
+
+            const roomIdCell = document.createElement("td");
+            roomIdCell.textContent = roomId;
+            row.appendChild(roomIdCell);
+
+            const studentNameCell = document.createElement("td");
+            studentNameCell.textContent = studentName;
+            row.appendChild(studentNameCell);
+
+            dataBody.appendChild(row);
+        }
+        //test
+        const serverData = [
+            {
+                timestamp: "12:34:56 01/06/2024",
+                roomId: "A101",
+                studentName: "Bảo Ngân"
+            },
+            {
+                timestamp: "15:45:23 01/06/2024",
+                roomId: "B202",
+                studentName: "Cao Thi"
+            }
+        ];
+        serverData.forEach(data => {
+            updateData(data.timestamp, data.roomId, data.studentName);
+        });
+
+
+        //get
+        function getInfo() {
+            fetch('/get_info', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Lỗi');
+                }
+            })
+            .then(data => {
+                const serverData = data; 
+                
+                serverData.forEach(data => {
+                    updateData(data.timestamp, data.roomId, data.studentName);
+                });
+
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }
+    </script>
+</body>
+</html>
